@@ -1,0 +1,37 @@
+config:
+  target: "http://localhost:3000"
+  phases:
+    - duration: 60
+      arrivalRate: 20
+      name: Warm up
+    # - duration: 120
+    #   arrivalRate: 5
+    #   rampTo: 50
+    #   name: Ramp up load
+    # - duration: 600
+    #   arrivalRate: 50
+    #   name: Sustained load
+  # payload:
+  #   # Load search keywords from an external CSV file and make them available
+  #   # to virtual user scenarios as variable "keywords":
+  #   path: "keywords.csv"
+  #   fields:
+  #     - "keywords"
+scenarios:
+  # We define one scenario:
+  - name: "Post to URL"
+    flow:
+      - post:
+          url: "/"
+          json:
+            hello: "world"
+        capture:
+          - json: "$.hello"
+            as: hello
+        expect:
+            - statusCode: 200
+            - contentType: json
+            - hasProperty: payload
+            - equals:
+              - "world"
+              - "{{ name }}"
